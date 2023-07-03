@@ -30,7 +30,7 @@ jobs:
         node sync/script/has-new-commit.mjs >> $GITHUB_OUTPUT
 
     - name: update sync repo with new sources
-      if: ${{ steps.check.outputs.has-new }}
+      if: ${{ steps.check.outputs.has-new == 'true' }}
       run: |
         rm -rf sync/cson
         mkdir -p sync/cson
@@ -47,7 +47,7 @@ jobs:
         done
 
     - name: check if should continue
-      if: ${{ steps.check.outputs.has-new }}
+      if: ${{ steps.check.outputs.has-new == 'true' }}
       id: should-continue
       run: |
         if [ -z "$(git status --porcelain=v1 2>/dev/null)" ]; then
@@ -57,13 +57,13 @@ jobs:
         fi
 
     - name: setup pnpm (yes)
-      if: ${{ steps.check.outputs.has-new && steps.should-continue.outputs.should-continue == 'true' }}
+      if: ${{ steps.check.outputs.has-new == 'true' && steps.should-continue.outputs.should-continue == 'true' }}
       uses: pnpm/action-setup@v2.2.4
       with:
         version: "8.5.1"
 
     - name: update and commit JSON from new CSON
-      if: ${{ steps.check.outputs.has-new && steps.should-continue.outputs.should-continue == 'true' }}
+      if: ${{ steps.check.outputs.has-new == 'true' && steps.should-continue.outputs.should-continue == 'true' }}
       working-directory: sync
       run: |
         pnpm i

@@ -77,5 +77,5 @@ jobs:
         git config --unset-all http.https://github.com/.extraheader # https://stackoverflow.com/a/69979203
 
         git add -A
-        git commit -m "(automated) updating JSON files from pulsar-edit/pulsar#$(git rev-parse HEAD)"
+        git commit -m "(automated) updating JSON files from pulsar-edit/pulsar@${{ steps.check.outputs.pulsar-commit }}"
         git push

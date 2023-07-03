@@ -1,3 +1,4 @@
+name: Sync from Pulsar
 on:
   schedule:
   - cron: 0 * * * *

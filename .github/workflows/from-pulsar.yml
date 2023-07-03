@@ -21,7 +21,9 @@ jobs:
       uses: actions/checkout@v3.5.3
       with:
         repository: pulsar-edit/pulsar
-        ref: master
+        # TODO: change this back to master when the PR is merged
+        # ref: master
+        ref: i18n
         path: pulsar
     - name: check if pulsar received a commit since last run
       id: check

@@ -1,5 +1,5 @@
 preserve_hierarchy: true
-commit_message: "Translations from Crowdin"
+commit_message: "(automated) Translations from Crowdin"
 append_commit_message: false
 
 files:

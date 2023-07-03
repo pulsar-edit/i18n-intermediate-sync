@@ -22,6 +22,7 @@ walk(cson, path_segments => {
 	full_path_json = full_path_json.substring(0, full_path_json.length - cson_ext_len) + json_ext;
 
 	let parsed = season.readFileSync(full_path_cson);
+	fs.mkdirSync(path.dirname(full_path_json), { recursive: true });
 	fs.writeFileSync(full_path_json, JSON.stringify(parsed, null, "  ") + "\n");
 
 	let relative_cson_file = path.join(relative_cson, ...path_segments);

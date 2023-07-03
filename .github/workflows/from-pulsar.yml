@@ -1,0 +1,87 @@
+on:
+  schedule:
+  - cron: 0 * * * *
+  workflow_dispatch:
+
+concurrency:
+  group: from-pulsar
+  cancel-in-progress: true
+
+jobs:
+  should-run:
+    runs-on: ubuntu-22.04
+    outputs:
+      should-run: ${{ steps.check.outputs.has-new }}
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v3.5.3
+      with:
+        path: sync
+    - name: checkout pulsar
+      uses: actions/checkout@v3.5.3
+      with:
+        repository: pulsar-edit/pulsar
+        ref: master
+        path: pulsar
+    - name: check if pulsar received a commit since last run
+      id: check
+      run: |
+        node sync/script/has-new-commit.mjs >> $GITHUB_OUTPUT
+
+  sync:
+    if: ${{ needs.should-run.outputs.should-run }}
+    needs:
+    - should-run
+    runs-on: ubuntu-22.04
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v3.5.3
+      with:
+        path: sync
+    - name: checkout pulsar
+      uses: actions/checkout@v3.5.3
+      with:
+        repository: pulsar-edit/pulsar
+        ref: master
+        path: pulsar
+    - name: update sync repo with new sources
+      run: |
+        rm -rf sync/cson
+        mkdir -p sync/cson
+
+        cp -R pulsar/i18n sync/cson/core
+
+        packages=()
+
+        mkdir -p sync/cson/packages
+        for package in "${packages[@]}"; do
+          if [ -d "pulsar/packages/$package/i18n" ]; then
+            cp -R "pulsar/packages/$package/i18n" "sync/cson/packages/$package"
+          fi
+        done
+    - name: check if should continue
+      id: should-continue
+      run: |
+        if [ -z "$(git status --porcelain=v1 2>/dev/null)" ]; then
+          echo "should-continue=false" >> $GITHUB_OUTPUT
+        else
+          echo "should-continue=true" >> $GITHUB_OUTPUT
+        fi
+    - name: setup pnpm (yes)
+      uses: pnpm/action-setup@v2.2.4
+    - name: update and commit JSON from new CSON
+      if: ${{ steps.should-continue.outputs.should-continue }}
+      run: |
+        node sync/script/update-json.mjs
+
+        cd sync
+
+        git config --global user.name smol
+        git config --global user.email 107521333+a-tiny-kirin@users.noreply.github.com
+        echo "https://meadowsys:${{ secrets.GITHUB_TOKEN }}@github.com" > sync/.git/credentials
+        git config --global credential.helper "store --file=.git/credentials"
+        git config --unset-all http.https://github.com/.extraheader # https://stackoverflow.com/a/69979203
+
+        git add -A
+        git commit -m "(automated) updating JSON files from pulsar-edit/pulsar#$(git rev-parse HEAD)"
+        git push

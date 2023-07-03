@@ -8,10 +8,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  should-run:
+  sync:
     runs-on: ubuntu-22.04
-    outputs:
-      should-run: ${{ steps.check.outputs.has-new }}
     steps:
     - name: checkout repo
       uses: actions/checkout@v3.5.3
@@ -21,32 +19,17 @@ jobs:
       uses: actions/checkout@v3.5.3
       with:
         repository: pulsar-edit/pulsar
-        # TODO: change this back to master when the PR is merged
-        # ref: master
+        # TODO change this back to master when the PR is merged
         ref: i18n
         path: pulsar
+
     - name: check if pulsar received a commit since last run
       id: check
       run: |
         node sync/script/has-new-commit.mjs >> $GITHUB_OUTPUT
 
-  sync:
-    if: ${{ needs.should-run.outputs.should-run }}
-    needs:
-    - should-run
-    runs-on: ubuntu-22.04
-    steps:
-    - name: checkout repo
-      uses: actions/checkout@v3.5.3
-      with:
-        path: sync
-    - name: checkout pulsar
-      uses: actions/checkout@v3.5.3
-      with:
-        repository: pulsar-edit/pulsar
-        ref: master
-        path: pulsar
     - name: update sync repo with new sources
+      if: ${{ steps.check.outputs.has-new }}
       run: |
         rm -rf sync/cson
         mkdir -p sync/cson
@@ -61,7 +44,9 @@ jobs:
             cp -R "pulsar/packages/$package/i18n" "sync/cson/packages/$package"
           fi
         done
+
     - name: check if should continue
+      if: ${{ steps.check.outputs.has-new }}
       id: should-continue
       run: |
         if [ -z "$(git status --porcelain=v1 2>/dev/null)" ]; then
@@ -69,10 +54,13 @@ jobs:
         else
           echo "should-continue=true" >> $GITHUB_OUTPUT
         fi
+
     - name: setup pnpm (yes)
+      if: ${{ steps.check.outputs.has-new && steps.should-continue.outputs.should-continue }}
       uses: pnpm/action-setup@v2.2.4
+
     - name: update and commit JSON from new CSON
-      if: ${{ steps.should-continue.outputs.should-continue }}
+      if: ${{ steps.check.outputs.has-new && steps.should-continue.outputs.should-continue }}
       run: |
         node sync/script/update-json.mjs
 

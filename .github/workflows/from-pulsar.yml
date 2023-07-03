@@ -59,6 +59,8 @@ jobs:
     - name: setup pnpm (yes)
       if: ${{ steps.check.outputs.has-new && steps.should-continue.outputs.should-continue }}
       uses: pnpm/action-setup@v2.2.4
+      with:
+        version: "8.5.1"
 
     - name: update and commit JSON from new CSON
       if: ${{ steps.check.outputs.has-new && steps.should-continue.outputs.should-continue }}

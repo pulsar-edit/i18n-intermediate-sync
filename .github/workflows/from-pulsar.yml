@@ -72,7 +72,7 @@ jobs:
 
         git config --global user.name smol
         git config --global user.email 107521333+a-tiny-kirin@users.noreply.github.com
-        echo "https://meadowsys:${{ secrets.GITHUB_TOKEN }}@github.com" > sync/.git/credentials
+        echo "https://meadowsys:${{ secrets.GITHUB_TOKEN }}@github.com" > .git/credentials
         git config --global credential.helper "store --file=.git/credentials"
         git config --unset-all http.https://github.com/.extraheader # https://stackoverflow.com/a/69979203
 

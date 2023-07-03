@@ -64,10 +64,11 @@ jobs:
 
     - name: update and commit JSON from new CSON
       if: ${{ steps.check.outputs.has-new && steps.should-continue.outputs.should-continue }}
+      working-directory: sync
       run: |
-        node sync/script/update-json.mjs
+        pnpm i
 
-        cd sync
+        node script/update-json.mjs
 
         git config --global user.name smol
         git config --global user.email 107521333+a-tiny-kirin@users.noreply.github.com

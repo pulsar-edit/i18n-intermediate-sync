@@ -6,8 +6,8 @@ import season from "season";
 import * as fs from "fs";
 import * as path from "path";
 
-let relative_cson = "sync/cson";
-let relative_json = "sync/json";
+let relative_cson = "cson";
+let relative_json = "json";
 let cson = path.resolve(relative_cson);
 let json = path.resolve(relative_json);
 fs.mkdirSync(cson, { recursive: true });

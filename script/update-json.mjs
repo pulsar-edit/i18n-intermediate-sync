@@ -5,6 +5,7 @@
 import season from "season";
 import * as fs from "fs";
 import * as path from "path";
+import { walk } from "./lib.mjs";
 
 let relative_cson = "cson";
 let relative_json = "json";
@@ -30,28 +31,3 @@ walk(cson, path_segments => {
 	relative_json_file = relative_json_file.substring(0, relative_json_file.length - cson_ext_len) + json_ext;
 	console.log(`${relative_cson_file} => ${relative_json_file}`);
 });
-
-/**
- * @param {string} rootpath
- * @param {(path_segments: Array<string>) => void} cb
- * @param {Array<string>} path_segments
- */
-function walk(rootpath, cb, path_segments = []) {
-	let fullpath = path.resolve(rootpath, ...path_segments);
-	let dir_contents = fs.readdirSync(fullpath);
-	for (let entry of dir_contents) {
-		let entry_fullpath = path.resolve(rootpath, ...path_segments, entry);
-		let stats = fs.statSync(entry_fullpath);
-
-		let ignored_prefixes = [".", "_"];
-		if (ignored_prefixes.find(p => entry.startsWith(p)) !== undefined) {
-			continue;
-		}
-
-		if (stats.isDirectory()) walk(rootpath, cb, [...path_segments, entry]);
-		else if (stats.isFile()) cb([...path_segments, entry]);
-		else {
-			console.log(`found something that's not dir or file: ${entry_fullpath}`);
-		}
-	}
-}

@@ -22,21 +22,21 @@ jobs:
     - name: authenticate
       id: authenticate
       run: |
-        if [ ${{ github.event.pull_request.user.id }} -eq 49562048 ]; then
-          echo "correct-user=true" >> $GITHUB_OUTPUT
+        if [ ${{ github.event.pull_request.user.id }} -eq 49562048 ] && [ ${{ github.event.pull_request.base.ref }} == "master" ] && [ ${{ github.event.pull_request.head.ref }} == "crowdin-service-branch" ]; then
+          echo "authenticated=true" >> $GITHUB_OUTPUT
         else
-          echo "correct-user=false" >> $GITHUB_OUTPUT
+          echo "authenticated=false" >> $GITHUB_OUTPUT
         fi
 
     - name: setup pnpm (yes)
-      if: ${{ steps.authenticate.outputs.correct-user == 'true' }}
+      if: ${{ steps.authenticate.outputs.authenticated == 'true' }}
       uses: pnpm/action-setup@v2.2.4
       with:
         version: "8.5.1"
 
     # safe enough to assume that there will be changes?
     - name: update and commit CSON from translated JSON
-      if: ${{ steps.authenticate.outputs.correct-user == 'true' }}
+      if: ${{ steps.authenticate.outputs.authenticated == 'true' }}
       run: |
         pnpm i
 

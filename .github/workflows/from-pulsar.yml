@@ -159,6 +159,7 @@ jobs:
       run: |
         pnpm i
 
+        rm -rf json
         node script/update-json.mjs
 
         git config --global user.name smol

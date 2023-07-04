@@ -1,0 +1,54 @@
+name: Sync from Crowdin
+on:
+  pull_request_target:
+    paths:
+    - json-translated
+
+concurrency:
+  group: from-crowdin-pr${{ github.event.pull_request.id }}
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v3.5.3
+      with:
+        ref: crowdin-service-branch
+
+    # only run on PRs from Meadowsys (id 49562048)
+    # (Crowdin PRs look like they come from the user that set up the integration)
+    - name: authenticate
+      id: authenticate
+      run: |
+        if [ ${{ github.event.pull_request.user.id }} -eq 49562048 ]; then
+          echo "correct-user=true" >> $GITHUB_OUTPUT
+        else
+          echo "correct-user=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: setup pnpm (yes)
+      if: ${{ steps.authenticate.outputs.correct-user == 'true' }}
+      uses: pnpm/action-setup@v2.2.4
+      with:
+        version: "8.5.1"
+
+    # safe enough to assume that there will be changes?
+    - name: update and commit CSON from translated JSON
+      if: ${{ steps.authenticate.outputs.correct-user == 'true' }}
+      run: |
+        pnpm i
+
+        rm -rf cson-translated
+        node script/translated-json-to-cson.mjs
+
+        git config --global user.name smol
+        git config --global user.email 107521333+a-tiny-kirin@users.noreply.github.com
+        echo "https://meadowsys:${{ secrets.GITHUB_TOKEN }}@github.com" > .git/credentials
+        git config --global credential.helper "store --file=.git/credentials"
+        git config --unset-all http.https://github.com/.extraheader # https://stackoverflow.com/a/69979203
+
+        git add -A
+        git commit -m "(automated) updating CSON files from Crowdin translated JSON files"
+        git push

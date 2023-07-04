@@ -2,7 +2,7 @@ name: Sync from Crowdin
 on:
   pull_request_target:
     paths:
-    - json-translated
+    - json-translated/**
 
 concurrency:
   group: from-crowdin-pr${{ github.event.pull_request.id }}

@@ -3,6 +3,8 @@
 import * as fs from "fs";
 import * as path from "path";
 
+const ignored_prefixes = [".", "_"];
+
 /**
  * @param {string} rootpath
  * @param {(path_segments: Array<string>) => void} cb
@@ -15,7 +17,6 @@ export function walk(rootpath, cb, path_segments = []) {
 		let entry_fullpath = path.resolve(rootpath, ...path_segments, entry);
 		let stats = fs.statSync(entry_fullpath);
 
-		let ignored_prefixes = [".", "_"];
 		if (ignored_prefixes.find(p => entry.startsWith(p)) !== undefined) {
 			continue;
 		}

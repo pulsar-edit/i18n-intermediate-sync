@@ -3,12 +3,12 @@
     "pulsar": {
       "about": "",
       "view-license": "",
-      "version": "",
+      "version": "Versie VERSION",
       "restart-and-install-update": "",
       "check-for-update": "",
       "checking-for-update": "",
       "downloading-update": "",
-      "preferences": "",
+      "preferences": "Instellingen",
       "config": "",
       "init-script": "",
       "keymap": "",
@@ -18,18 +18,18 @@
       "quit": ""
     },
     "macos": {
-      "services": "",
-      "hide-self": "",
-      "hide-others": "",
-      "show-all": ""
+      "services": "Voorzieningen",
+      "hide-self": "Verberg Pulsar",
+      "hide-others": "Verberg andere",
+      "show-all": "Toon alles"
     },
     "file": {
       "self": "",
       "new-window": "",
       "new-file": "",
-      "open": "",
-      "open-file": "",
-      "open-folder": "",
+      "open": "Open...",
+      "open-file": "Open bestand...",
+      "open-folder": "Open map...",
       "add-project-folder": "",
       "project-history": {
         "reopen-project": "",

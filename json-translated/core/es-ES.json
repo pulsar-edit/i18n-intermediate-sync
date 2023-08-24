@@ -10,7 +10,7 @@
       "downloading-update": "Descargando la actualización",
       "preferences": "Preferencias",
       "config": "Configuración",
-      "init-script": "",
+      "init-script": "Script de inicio",
       "keymap": "Atajos del teclado",
       "snippets": "Fragmentos",
       "stylesheet": "Hoja de estilos",
@@ -30,7 +30,7 @@
       "open": "Abrir...",
       "open-file": "Abrir archivo...",
       "open-folder": "Abrir carpeta...",
-      "add-project-folder": "",
+      "add-project-folder": "Agregar carpeta de proyecto",
       "project-history": {
         "reopen-project": "Reabrir proyecto",
         "clear": "Borrar historial del proyecto"
@@ -119,7 +119,7 @@
         "self": "Desarrollador",
         "open-in-dev-mode": "Abrir en modo desarrollador",
         "reload-window": "Recargar ventana",
-        "run-package-specs": "",
+        "run-package-specs": "Ejecutar Specs de paquete",
         "toggle-dev-tools": "Alternar Herramientas de Desarrollador"
       },
       "increase-font-size": "Aumentar tamaño de fuente",

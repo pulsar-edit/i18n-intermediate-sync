@@ -28,7 +28,7 @@ walk(cson_dir_absolute, path_segments => {
 	let cson_file_absolute = path.resolve(cson_file_relative);
 	let json_file_absolute = path.resolve(json_file_relative);
 
-	let temp = convert_file_ext(json_file_absolute, cson_ext, accepted_src_exts);
+	let temp = convert_file_ext(json_file_absolute, json_ext, accepted_src_exts);
 	if (!temp) return;
 	json_file_absolute = temp;
 

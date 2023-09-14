@@ -5,3 +5,5 @@ append_commit_message: false
 files:
 - source: /json/**/en.json
   translation: /json-translated/**/%locale%.json
+  skip_untranslated_files: true
+  skip_untranslated_strings: true

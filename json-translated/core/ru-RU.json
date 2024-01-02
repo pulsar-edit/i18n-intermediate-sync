@@ -2,12 +2,12 @@
   "menu": {
     "pulsar": {
       "about": "",
-      "view-license": "",
+      "view-license": "Просмотреть лицензию",
       "version": "",
-      "restart-and-install-update": "",
-      "check-for-update": "",
-      "checking-for-update": "",
-      "downloading-update": "",
+      "restart-and-install-update": "Перезапустить для установки обновления",
+      "check-for-update": "Проверить наличие обновлений",
+      "checking-for-update": "Проверяю на наличие обновлений",
+      "downloading-update": "Загрузка обновления",
       "preferences": "Настройки",
       "config": "Конфигурация",
       "init-script": "Скрипт инициализации",
